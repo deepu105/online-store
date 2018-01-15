@@ -3,9 +3,10 @@
     "relationships": [
         {
             "relationshipType": "many-to-one",
+            "relationshipValidateRules": "required",
             "relationshipName": "invoice",
             "otherEntityName": "invoice",
-            "otherEntityField": "id"
+            "otherEntityField": "code"
         }
     ],
     "fields": [

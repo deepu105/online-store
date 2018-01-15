@@ -15,6 +15,7 @@ export const enum PaymentMethod {
 export class Invoice implements BaseEntity {
     constructor(
         public id?: number,
+        public code?: string,
         public date?: any,
         public details?: string,
         public status?: InvoiceStatus,

@@ -115,10 +115,16 @@
 
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="storeApp.customer.user" for="field_user">User</label>
-            <select class="form-control" id="field_user" name="user" [(ngModel)]="customer.user" >
-                <option [ngValue]="null"></option>
-                <option [ngValue]="userOption.id === customer.user?.id ? customer.user : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+            <select class="form-control" id="field_user" name="user" [(ngModel)]="customer.user"  required>
+                <option *ngIf="!editForm.value.user" [ngValue]="null" selected></option>
+                <option [ngValue]="userOption.id === customer.user?.id ? customer.user : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.login}}</option>
             </select>
+        </div>
+        <div [hidden]="!(editForm.controls.user?.dirty && editForm.controls.user?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.user?.errors?.required" jhiTranslate="entity.validation.required">
+                This field is required.
+            </small>
         </div>
     </div>
     <div class="modal-footer">

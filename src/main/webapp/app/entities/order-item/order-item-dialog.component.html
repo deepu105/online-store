@@ -67,17 +67,29 @@
 
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="storeApp.orderItem.product" for="field_product">Product</label>
-            <select class="form-control" id="field_product" name="product" [(ngModel)]="orderItem.product" >
-                <option [ngValue]="null"></option>
-                <option [ngValue]="productOption.id === orderItem.product?.id ? orderItem.product : productOption" *ngFor="let productOption of products; trackBy: trackProductById">{{productOption.id}}</option>
+            <select class="form-control" id="field_product" name="product" [(ngModel)]="orderItem.product"  required>
+                <option *ngIf="!editForm.value.product" [ngValue]="null" selected></option>
+                <option [ngValue]="productOption.id === orderItem.product?.id ? orderItem.product : productOption" *ngFor="let productOption of products; trackBy: trackProductById">{{productOption.name}}</option>
             </select>
+        </div>
+        <div [hidden]="!(editForm.controls.product?.dirty && editForm.controls.product?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.product?.errors?.required" jhiTranslate="entity.validation.required">
+                This field is required.
+            </small>
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="storeApp.orderItem.order" for="field_order">Order</label>
-            <select class="form-control" id="field_order" name="order" [(ngModel)]="orderItem.order" >
-                <option [ngValue]="null"></option>
-                <option [ngValue]="productOrderOption.id === orderItem.order?.id ? orderItem.order : productOrderOption" *ngFor="let productOrderOption of productorders; trackBy: trackProductOrderById">{{productOrderOption.id}}</option>
+            <select class="form-control" id="field_order" name="order" [(ngModel)]="orderItem.order"  required>
+                <option *ngIf="!editForm.value.order" [ngValue]="null" selected></option>
+                <option [ngValue]="productOrderOption.id === orderItem.order?.id ? orderItem.order : productOrderOption" *ngFor="let productOrderOption of productorders; trackBy: trackProductOrderById">{{productOrderOption.code}}</option>
             </select>
+        </div>
+        <div [hidden]="!(editForm.controls.order?.dirty && editForm.controls.order?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.order?.errors?.required" jhiTranslate="entity.validation.required">
+                This field is required.
+            </small>
         </div>
     </div>
     <div class="modal-footer">

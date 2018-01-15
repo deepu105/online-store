@@ -31,7 +31,7 @@ describe('Customer e2e test', () => {
         customerDialogPage.close();
     });
 
-    it('should create and save Customers', () => {
+   /* it('should create and save Customers', () => {
         customerComponentsPage.clickOnCreateButton();
         customerDialogPage.setFirstNameInput('firstName');
         expect(customerDialogPage.getFirstNameInput()).toMatch('firstName');
@@ -53,7 +53,7 @@ describe('Customer e2e test', () => {
         customerDialogPage.userSelectLastOption();
         customerDialogPage.save();
         expect(customerDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    });
+    });*/
 
     afterAll(() => {
         navBarPage.autoSignOut();
