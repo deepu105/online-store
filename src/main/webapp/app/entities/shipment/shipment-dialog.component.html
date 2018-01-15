@@ -42,10 +42,16 @@
 
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="storeApp.shipment.invoice" for="field_invoice">Invoice</label>
-            <select class="form-control" id="field_invoice" name="invoice" [(ngModel)]="shipment.invoice" >
-                <option [ngValue]="null"></option>
-                <option [ngValue]="invoiceOption.id === shipment.invoice?.id ? shipment.invoice : invoiceOption" *ngFor="let invoiceOption of invoices; trackBy: trackInvoiceById">{{invoiceOption.id}}</option>
+            <select class="form-control" id="field_invoice" name="invoice" [(ngModel)]="shipment.invoice"  required>
+                <option *ngIf="!editForm.value.invoice" [ngValue]="null" selected></option>
+                <option [ngValue]="invoiceOption.id === shipment.invoice?.id ? shipment.invoice : invoiceOption" *ngFor="let invoiceOption of invoices; trackBy: trackInvoiceById">{{invoiceOption.code}}</option>
             </select>
+        </div>
+        <div [hidden]="!(editForm.controls.invoice?.dirty && editForm.controls.invoice?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.invoice?.errors?.required" jhiTranslate="entity.validation.required">
+                This field is required.
+            </small>
         </div>
     </div>
     <div class="modal-footer">

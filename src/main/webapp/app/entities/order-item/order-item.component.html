@@ -20,8 +20,8 @@
             <th jhiSortBy="quantity"><span jhiTranslate="storeApp.orderItem.quantity">Quantity</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="totalPrice"><span jhiTranslate="storeApp.orderItem.totalPrice">Total Price</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="status"><span jhiTranslate="storeApp.orderItem.status">Status</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="product.id"><span jhiTranslate="storeApp.orderItem.product">Product</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="order.id"><span jhiTranslate="storeApp.orderItem.order">Order</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="product.name"><span jhiTranslate="storeApp.orderItem.product">Product</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="order.code"><span jhiTranslate="storeApp.orderItem.order">Order</span> <span class="fa fa-sort"></span></th>
             <th></th>
             </tr>
             </thead>
@@ -33,12 +33,12 @@
                 <td jhiTranslate="{{'storeApp.OrderItemStatus.' + orderItem.status}}">{{orderItem.status}}</td>
                 <td>
                     <div *ngIf="orderItem.product">
-                        <a [routerLink]="['../product', orderItem.product?.id ]" >{{orderItem.product?.id}}</a>
+                        <a [routerLink]="['../product', orderItem.product?.id ]" >{{orderItem.product?.name}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="orderItem.order">
-                        <a [routerLink]="['../product-order', orderItem.order?.id ]" >{{orderItem.order?.id}}</a>
+                        <a [routerLink]="['../product-order', orderItem.order?.id ]" >{{orderItem.order?.code}}</a>
                     </div>
                 </td>
                 <td class="text-right">

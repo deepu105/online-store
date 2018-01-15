@@ -19,7 +19,7 @@
         <dt><span jhiTranslate="storeApp.shipment.invoice">Invoice</span></dt>
         <dd>
             <div *ngIf="shipment.invoice">
-                <a [routerLink]="['/invoice', shipment.invoice?.id]">{{shipment.invoice?.id}}</a>
+                <a [routerLink]="['/invoice', shipment.invoice?.id]">{{shipment.invoice?.code}}</a>
             </div>
         </dd>
     </dl>

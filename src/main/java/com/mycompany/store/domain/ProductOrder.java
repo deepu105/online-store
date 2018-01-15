@@ -52,7 +52,8 @@ public class ProductOrder implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Invoice> invoices = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @NotNull
     private Customer customer;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
