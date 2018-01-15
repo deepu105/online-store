@@ -12,68 +12,83 @@
     <div class="row">
     </div>
     <br/>
-    <div class="table-responsive" *ngIf="products">
-        <table class="table table-striped">
-            <thead>
-            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="name"><span jhiTranslate="storeApp.product.name">Name</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="description"><span jhiTranslate="storeApp.product.description">Description</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="price"><span jhiTranslate="storeApp.product.price">Price</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="size"><span jhiTranslate="storeApp.product.size">Size</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="image"><span jhiTranslate="storeApp.product.image">Image</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="productCategory.name"><span jhiTranslate="storeApp.product.productCategory">Product Category</span> <span class="fa fa-sort"></span></th>
-            <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let product of products ;trackBy: trackId">
-                <td><a [routerLink]="['../product', product.id ]">{{product.id}}</a></td>
-                <td>{{product.name}}</td>
-                <td>{{product.description}}</td>
-                <td>{{product.price}}</td>
-                <td jhiTranslate="{{'storeApp.Size.' + product.size}}">{{product.size}}</td>
-                <td>
-                    <a *ngIf="product.image" (click)="openFile(product.imageContentType, product.image)">
-                        <img [src]="'data:' + product.imageContentType + ';base64,' + product.image" style="max-height: 30px;" alt="product image"/>
-                    </a>
-                    <span *ngIf="product.image">{{product.imageContentType}}, {{byteSize(product.image)}}</span>
-                </td>
-                <td>
-                    <div *ngIf="product.productCategory">
-                        <a [routerLink]="['../product-category', product.productCategory?.id ]" >{{product.productCategory?.name}}</a>
+    <div *ngIf="products">
+        <div class="mb-2 d-flex justify-content-end align-items-center">
+            <span class="mr-2 col-2">Filter by name</span>
+            <input type="search" class="form-control" [(ngModel)]="filter">
+            <span class="mx-2 col-1">Sort by</span>
+            <div class="btn-group" role="group"
+                jhiSort [(predicate)]="predicate" [(ascending)]="reverse"
+                        [callback]="transition.bind(this)">
+                <button type="button" class="btn btn-light" jhiSortBy="name">
+                    <span jhiTranslate="storeApp.product.name">Name</span>
+                    <span class="fa fa-sort"></span>
+                </button>
+                <button type="button" class="btn btn-light" jhiSortBy="price">
+                    <span jhiTranslate="storeApp.product.price">Price</span>
+                    <span class="fa fa-sort"></span>
+                </button>
+                <button type="button" class="btn btn-light" jhiSortBy="size">
+                    <span jhiTranslate="storeApp.product.size">Size</span>
+                    <span class="fa fa-sort"></span>
+                </button>
+                <button type="button" class="btn btn-light" jhiSortBy="productCategory.id">
+                    <span jhiTranslate="storeApp.product.productCategory">Product Category</span>
+                    <span class="fa fa-sort"></span>
+                </button>
+            </div>
+        </div>
+        <div class="list-group">
+            <a [routerLink]="['../product', product.id ]" class="list-group-item list-group-item-action flex-column align-items-start"
+                *ngFor="let product of (products | pureFilter:filter:'name'); trackBy: trackId">
+                <div class="row">
+                    <div class="col-2 col-xs-12 d-flex justify-content-center">
+                        <img [src]="'data:' + product.imageContentType + ';base64,' + product.image" style="max-height:150px;" alt="product image"/>
                     </div>
-                </td>
-                <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
-                        <button type="submit"
-                                [routerLink]="['../product', product.id ]"
-                                class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
-                        </button>
-                        <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'product/'+ product.id + '/edit'} }]"
-                                replaceUrl="true"
-                                queryParamsHandling="merge"
-                                class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-                        </button>
-                        <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'product/'+ product.id + '/delete'} }]"
-                                replaceUrl="true"
-                                queryParamsHandling="merge"
-                                class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-                        </button>
+                    <div class="col col-xs-12">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{product.name}}</h5>
+                            <small *ngIf="product.productCategory">
+                                <a [routerLink]="['../product-category',
+                                    product.productCategory?.id ]" >
+                                    Category: {{product.productCategory?.name}}
+                                </a>
+                            </small>
+                        </div>
+                        <small class="mb-1">{{product.description}}</small>
+                        <p class="mb-1">{{product.price | currency:'USD'}}</p>
+                        <small>
+                            Size:
+                            <span jhiTranslate="{{'storeApp.Size.' + product.size}}">
+                                {{product.size}}
+                            </span>
+                        </small>
+                        <div *jhiHasAnyAuthority="'ROLE_ADMIN'">
+                            <button type="submit"
+                                    [routerLink]="['/',
+                                        { outlets: { popup: 'product/'+ product.id + '/edit'} }]"
+                                    replaceUrl="true"
+                                    queryParamsHandling="merge"
+                                    class="btn btn-primary btn-sm">
+                                <span class="fa fa-pencil"></span>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+                            <button type="submit"
+                                    [routerLink]="['/',
+                                        { outlets: { popup: 'product/'+ product.id + '/delete'} }]"
+                                    replaceUrl="true"
+                                    queryParamsHandling="merge"
+                                    class="btn btn-danger btn-sm">
+                                <span class="fa fa-remove"></span>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
                     </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                </div>
+            </a>
+        </div>
     </div>
+
     <div *ngIf="products && products.length">
         <div class="row justify-content-center">
             <jhi-item-count [page]="page" [total]="queryCount" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
