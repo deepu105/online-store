@@ -1,13 +1,15 @@
 package com.mycompany.store.service;
 
-import com.mycompany.store.domain.OrderItem;
-import com.mycompany.store.repository.OrderItemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.mycompany.store.domain.OrderItem;
+import com.mycompany.store.repository.OrderItemRepository;
+import com.mycompany.store.security.AuthoritiesConstants;
+import com.mycompany.store.security.SecurityUtils;
 
 
 /**
@@ -45,7 +47,13 @@ public class OrderItemService {
     @Transactional(readOnly = true)
     public Page<OrderItem> findAll(Pageable pageable) {
         log.debug("Request to get all OrderItems");
-        return orderItemRepository.findAll(pageable);
+        if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
+            return orderItemRepository.findAll(pageable);
+        } else
+            return orderItemRepository.findAllByOrderCustomerUserLogin(
+                SecurityUtils.getCurrentUserLogin().get(),
+                pageable
+            );
     }
 
     /**
@@ -57,7 +65,13 @@ public class OrderItemService {
     @Transactional(readOnly = true)
     public OrderItem findOne(Long id) {
         log.debug("Request to get OrderItem : {}", id);
-        return orderItemRepository.findOne(id);
+        if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
+            return orderItemRepository.findOne(id);
+        } else
+            return orderItemRepository.findOneByIdAndOrderCustomerUserLogin(
+                id,
+                SecurityUtils.getCurrentUserLogin().get()
+            );
     }
 
     /**

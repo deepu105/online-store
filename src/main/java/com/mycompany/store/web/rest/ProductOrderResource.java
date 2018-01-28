@@ -1,12 +1,10 @@
 package com.mycompany.store.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.mycompany.store.domain.ProductOrder;
-import com.mycompany.store.service.ProductOrderService;
-import com.mycompany.store.web.rest.errors.BadRequestAlertException;
-import com.mycompany.store.web.rest.util.HeaderUtil;
-import com.mycompany.store.web.rest.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -14,14 +12,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import com.codahale.metrics.annotation.Timed;
+import com.mycompany.store.domain.ProductOrder;
+import com.mycompany.store.service.ProductOrderService;
+import com.mycompany.store.web.rest.errors.BadRequestAlertException;
+import com.mycompany.store.web.rest.util.HeaderUtil;
+import com.mycompany.store.web.rest.util.PaginationUtil;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing ProductOrder.
@@ -49,6 +49,7 @@ public class ProductOrderResource {
      */
     @PostMapping("/product-orders")
     @Timed
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ProductOrder> createProductOrder(@Valid @RequestBody ProductOrder productOrder) throws URISyntaxException {
         log.debug("REST request to save ProductOrder : {}", productOrder);
         if (productOrder.getId() != null) {
@@ -71,6 +72,7 @@ public class ProductOrderResource {
      */
     @PutMapping("/product-orders")
     @Timed
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ProductOrder> updateProductOrder(@Valid @RequestBody ProductOrder productOrder) throws URISyntaxException {
         log.debug("REST request to update ProductOrder : {}", productOrder);
         if (productOrder.getId() == null) {
@@ -119,6 +121,7 @@ public class ProductOrderResource {
      */
     @DeleteMapping("/product-orders/{id}")
     @Timed
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteProductOrder(@PathVariable Long id) {
         log.debug("REST request to delete ProductOrder : {}", id);
         productOrderService.delete(id);

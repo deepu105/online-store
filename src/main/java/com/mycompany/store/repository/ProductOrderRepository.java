@@ -1,9 +1,10 @@
 package com.mycompany.store.repository;
 
-import com.mycompany.store.domain.ProductOrder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import org.springframework.data.jpa.repository.*;
+import com.mycompany.store.domain.ProductOrder;
 
 
 /**
@@ -13,4 +14,7 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface ProductOrderRepository extends JpaRepository<ProductOrder, Long> {
 
+    Page<ProductOrder> findAllByCustomerUserLogin(String login, Pageable pageable);
+
+    ProductOrder findOneByIdAndCustomerUserLogin(Long id, String login);
 }
