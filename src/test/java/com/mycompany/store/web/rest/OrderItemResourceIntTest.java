@@ -1,14 +1,8 @@
 package com.mycompany.store.web.rest;
 
-import com.mycompany.store.StoreApp;
-
-import com.mycompany.store.domain.OrderItem;
-import com.mycompany.store.domain.Product;
-import com.mycompany.store.domain.ProductOrder;
-import com.mycompany.store.repository.OrderItemRepository;
-import com.mycompany.store.service.OrderItemService;
-import com.mycompany.store.web.rest.errors.ExceptionTranslator;
-
+import java.math.BigDecimal;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,22 +12,30 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import java.math.BigDecimal;
-import java.util.List;
+import com.mycompany.store.StoreApp;
+import com.mycompany.store.domain.OrderItem;
+import com.mycompany.store.domain.Product;
+import com.mycompany.store.domain.ProductOrder;
+import com.mycompany.store.domain.enumeration.OrderItemStatus;
+import com.mycompany.store.repository.OrderItemRepository;
+import com.mycompany.store.service.OrderItemService;
+import com.mycompany.store.web.rest.errors.ExceptionTranslator;
 
 import static com.mycompany.store.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import com.mycompany.store.domain.enumeration.OrderItemStatus;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 /**
  * Test class for the OrderItemResource REST controller.
  *
@@ -41,6 +43,7 @@ import com.mycompany.store.domain.enumeration.OrderItemStatus;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = StoreApp.class)
+@WithMockUser(username="admin", authorities={"ROLE_ADMIN"}, password = "admin")
 public class OrderItemResourceIntTest {
 
     private static final Integer DEFAULT_QUANTITY = 0;

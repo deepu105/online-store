@@ -1,13 +1,9 @@
 package com.mycompany.store.web.rest;
 
-import com.mycompany.store.StoreApp;
-
-import com.mycompany.store.domain.Shipment;
-import com.mycompany.store.domain.Invoice;
-import com.mycompany.store.repository.ShipmentRepository;
-import com.mycompany.store.service.ShipmentService;
-import com.mycompany.store.web.rest.errors.ExceptionTranslator;
-
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,21 +13,28 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
+import com.mycompany.store.StoreApp;
+import com.mycompany.store.domain.Invoice;
+import com.mycompany.store.domain.Shipment;
+import com.mycompany.store.repository.ShipmentRepository;
+import com.mycompany.store.service.ShipmentService;
+import com.mycompany.store.web.rest.errors.ExceptionTranslator;
 
 import static com.mycompany.store.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the ShipmentResource REST controller.
@@ -40,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = StoreApp.class)
+@WithMockUser(username="admin", authorities={"ROLE_ADMIN"}, password = "admin")
 public class ShipmentResourceIntTest {
 
     private static final String DEFAULT_TRACKING_CODE = "AAAAAAAAAA";
